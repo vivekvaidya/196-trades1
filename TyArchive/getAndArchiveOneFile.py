@@ -13,13 +13,13 @@ def getDataJson(name):
         data = None
     return data
 
-with open("filed.json","a") as filed:
+with open("filed.json","w") as filed:
+    counter = 0
     while True: 
         js = getDataJson(["TSLA","Ford","GM"])
-        counter = 0
         if js is not None:
             json.dump(js,filed) 
             filed.write("\n")
             counter+=1
-
+            print counter
         time.sleep(2)
