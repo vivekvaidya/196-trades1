@@ -18,9 +18,16 @@ class Strategy:
             buy_range = self._PERCENTAGE*self._total_avg[stock_name]
             stock_price = float(stock_price)
             if stock_price > buy_range+self._total_avg[stock_name]:
-                decision.append({stock_name: [2, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                if self.risk(stock_name,stock_amount,2):
+                    decision.append({stock_name: [2, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                else:
+                    decision.append({stock_name: [0,0]})
+
             elif stock_price < -1*buy_range+self._total_avg[stock_name]:
-                decision.append({stock_name: [1, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                if self.risk(stock_name,stock_amount,1):
+                    decision.append({stock_name: [1, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                else:
+                    decision.append({stock_name:[0,0]})
             else:
                 decision.append({stock_name: [0,0]})
         return decision
@@ -37,3 +44,6 @@ class Strategy:
             total+=days["Close"][x]
         totals = total/float(amountDays)
         return  totals
+
+    def risk(self,name,amount,buySell):
+        return True
