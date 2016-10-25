@@ -1,9 +1,11 @@
 import pandas
+from Risky import *
 class Strategy:
     _total_avg = {}
     _counter = 0
     _PERCENTAGE = .10
     _AMOUNTDAYS = 10
+    risk = Risky()
     def mean_strategy(self,datum):
         """Uses mean reversion to decide if to buy, sell, or do nothing.
         Datum is what is returned by a yahoo finance api call on stocks. """
@@ -16,15 +18,18 @@ class Strategy:
             self._total_avg[stock_name] = self.getAverage(self._AMOUNTDAYS,stock_name)
             stock_amount = 1 #for testing purposes buy/sell only one for now
             buy_range = self._PERCENTAGE*self._total_avg[stock_name]
-            stock_price = float(stock_price)
+	    try:
+                stock_price = float(stock_price)
+	    except TypeError:
+		stock_price = self._total_avg[stock_name]
             if stock_price > buy_range+self._total_avg[stock_name]:
-                if self.risk(stock_name,stock_amount,2):
+                if risk.risk(stock_name,stock_amount,2):
                     decision.append({stock_name: [2, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
                 else:
                     decision.append({stock_name: [0,0]})
 
             elif stock_price < -1*buy_range+self._total_avg[stock_name]:
-                if self.risk(stock_name,stock_amount,1):
+                if risk.risk(stock_name,stock_amount,1):
                     decision.append({stock_name: [1, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
                 else:
                     decision.append({stock_name:[0,0]})
