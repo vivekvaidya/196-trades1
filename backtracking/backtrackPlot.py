@@ -20,8 +20,8 @@ VIXFiftyDay=[]
 VIXTwoHundredDay=[]
 
 stamps = []
-with open("filed.json","r") as file:
-    for i in enumerate(file):
+with open("filed.json","r") as tsla:
+    for i in enumerate(tsla):
         data = json.loads(i[1])
         timeStamp = data["query"]["created"]
         timeStamp = calendar.timegm(time.strptime(timeStamp,"%Y-%m-%dT%H:%M:%SZ"))
@@ -42,23 +42,21 @@ with open("filed.json","r") as file:
         VIXFiftyDay.append(data["query"]["results"]["quote"][2]["FiftydayMovingAverage"])
         VIXAskPrice.append(data["query"]["results"]["quote"][2]["TwoHundreddayMovingAverage"])
 
-print stamps
+
+fig, ax = plt.subplots()
 
 
-# fig, ax = plt.subplots()
-#
-#
-#
-#
-# plt.title("Asking Price")
-# plt.plot(stamps,askPrice)
-# plt.show()
-# plt.title("Volume")
-# plt.plot(stamps,volume)
-# plt.show()
-# plt.title("Fifty Day")
-# plt.plot(stamps,fiftyDay)
-# plt.show()
-# plt.title("Two Hundred Day")
-# plt.plot(stamps,TwoHundredDay)
-# plt.show()
+
+
+plt.title("Asking Price")
+plt.plot(stamps,askPrice)
+plt.show()
+plt.title("Volume")
+plt.plot(stamps,volume)
+plt.show()
+plt.title("Fifty Day")
+plt.plot(stamps,fiftyDay)
+plt.show()
+plt.title("Two Hundred Day")
+plt.plot(stamps,TwoHundredDay)
+plt.show()
