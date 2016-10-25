@@ -2,10 +2,23 @@ import json
 import time
 import calendar
 import matplotlib.pyplot as plt
-askPrice = []
-volume=[]
-fiftyDay=[]
-TwoHundredDay=[]
+import collections
+
+TslaAskPrice = []
+TslaVolume=[]
+TslaFiftyDay=[]
+TslaTwoHundredDay=[]
+
+VTIAskPrice = []
+VTIVolume=[]
+VTIFiftyDay=[]
+VTITwoHundredDay=[]
+
+VIXAskPrice = []
+VIXVolume=[]
+VIXFiftyDay=[]
+VIXTwoHundredDay=[]
+
 stamps = []
 with open("filed.json","r") as tsla:
     for i in enumerate(tsla):
@@ -13,10 +26,27 @@ with open("filed.json","r") as tsla:
         timeStamp = data["query"]["created"]
         timeStamp = calendar.timegm(time.strptime(timeStamp,"%Y-%m-%dT%H:%M:%SZ"))
         stamps.append(timeStamp)
-        askPrice.append(data["query"]["results"]["quote"][0]["Ask"])
-        volume.append(data["query"]["results"]["quote"][0]["Volume"])
-        fiftyDay.append(data["query"]["results"]["quote"][0]["FiftydayMovingAverage"])
-        TwoHundredDay.append(data["query"]["results"]["quote"][0]["TwoHundreddayMovingAverage"])
+
+        TslaAskPrice.append(data["query"]["results"]["quote"][0]["Ask"])
+        TslaVolume.append(data["query"]["results"]["quote"][0]["Volume"])
+        TslaFiftyDay.append(data["query"]["results"]["quote"][0]["FiftydayMovingAverage"])
+        VTITwoHundredDay.append(data["query"]["results"]["quote"][0]["TwoHundreddayMovingAverage"])
+
+        VTIAskPrice.append(data["query"]["results"]["quote"][1]["Ask"])
+        VTIVolume.append(data["query"]["results"]["quote"][1]["Volume"])
+        VTIFiftyDay.append(data["query"]["results"]["quote"][1]["FiftydayMovingAverage"])
+        VTIAskPrice.append(data["query"]["results"]["quote"][1]["TwoHundreddayMovingAverage"])
+
+        VIXAskPrice.append(data["query"]["results"]["quote"][2]["Ask"])
+        VIXVolume.append(data["query"]["results"]["quote"][2]["Volume"])
+        VIXFiftyDay.append(data["query"]["results"]["quote"][2]["FiftydayMovingAverage"])
+        VIXAskPrice.append(data["query"]["results"]["quote"][2]["TwoHundreddayMovingAverage"])
+
+
+fig, ax = plt.subplots()
+
+
+
 
 plt.title("Asking Price")
 plt.plot(stamps,askPrice)
