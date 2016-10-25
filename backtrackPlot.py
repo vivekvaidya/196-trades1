@@ -20,8 +20,8 @@ VIXFiftyDay=[]
 VIXTwoHundredDay=[]
 
 stamps = []
-with open("filed.json","r") as tsla:
-    for i in enumerate(tsla):
+with open("filed.json","r") as file:
+    for i in enumerate(file):
         data = json.loads(i[1])
         timeStamp = data["query"]["created"]
         timeStamp = calendar.timegm(time.strptime(timeStamp,"%Y-%m-%dT%H:%M:%SZ"))
