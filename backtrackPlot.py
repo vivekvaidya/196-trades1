@@ -42,21 +42,23 @@ with open("filed.json","r") as tsla:
         VIXFiftyDay.append(data["query"]["results"]["quote"][2]["FiftydayMovingAverage"])
         VIXAskPrice.append(data["query"]["results"]["quote"][2]["TwoHundreddayMovingAverage"])
 
-
-fig, ax = plt.subplots()
-
+print stamps
 
 
-
-plt.title("Asking Price")
-plt.plot(stamps,askPrice)
-plt.show()
-plt.title("Volume")
-plt.plot(stamps,volume)
-plt.show()
-plt.title("Fifty Day")
-plt.plot(stamps,fiftyDay)
-plt.show()
-plt.title("Two Hundred Day")
-plt.plot(stamps,TwoHundredDay)
-plt.show()
+# fig, ax = plt.subplots()
+#
+#
+#
+#
+# plt.title("Asking Price")
+# plt.plot(stamps,askPrice)
+# plt.show()
+# plt.title("Volume")
+# plt.plot(stamps,volume)
+# plt.show()
+# plt.title("Fifty Day")
+# plt.plot(stamps,fiftyDay)
+# plt.show()
+# plt.title("Two Hundred Day")
+# plt.plot(stamps,TwoHundredDay)
+# plt.show()
