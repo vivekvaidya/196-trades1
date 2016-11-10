@@ -1,4 +1,5 @@
 import pandas
+import json
 from Risky import *
 from Money import *
 class Strategy:
@@ -9,11 +10,11 @@ class Strategy:
     risky = Risky()
     money = Money(0)
     def __init__(self, amount):
-        money = Money(amount) #parameter is the amount of money to start with
+        self.money = Money(amount) #parameter is the amount of money to start with
     def mean_strategy(self,datum):
         """Uses mean reversion to decide if to buy, sell, or do nothing.
         Datum is what is returned by a yahoo finance api call on stocks. """
-        decision = []
+        decision = {}
         self._counter +=1
         for stock in datum["query"]["results"]["quote"]:
             stock_price = stock["Ask"]
@@ -28,19 +29,20 @@ class Strategy:
 		stock_price = self._total_avg[stock_name]
             if stock_price > buy_range+self._total_avg[stock_name]:
                 if self.risky.risk(stock_name,stock_amount,2):
-                    decision.append({stock_name: [2, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                    decision[stock_name]=[2, stock_amount]  #0 is nothing, 1 is buy, 2 is sell
                     self.money.add(stock_price)
                 else:
-                    decision.append({stock_name: [0,0]})
+                    decision[stock_name]= [0,0]
 
             elif stock_price < -1*buy_range+self._total_avg[stock_name]:
                 if self.risky.risk(stock_name,stock_amount,1) and self.money.getMoney() > stock_price:
-                    decision.append({stock_name: [1, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                    decision[stock_name]= [1, stock_amount]  #0 is nothing, 1 is buy, 2 is sell
                     self.money.remove(stock_price)
                 else:
-                    decision.append({stock_name:[0,0]})
+                    decision[stock_name] = [0,0]
             else:
-                decision.append({stock_name: [0,0]})
+                decision[stock_name] =  [0,0]
+        self.writeToFile(decision,"Decisions.json","a")
         return decision
 
 
@@ -57,6 +59,8 @@ class Strategy:
         totals = total/float(amountDays)
         return  totals
 
-#    def appendToFile(decision,filename,wa):
-#        with open(filename,wa) as fp:
-#            fp.write(decision
+    def writeToFile(self,decision,filename,wa): #wa is if you want to write or append
+        decision["Money"] = float(int(self.money.getMoney()*100))/100
+        with open(filename,wa) as fp:
+            json.dump(decision,fp)
+            fp.write("\n")

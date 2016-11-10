@@ -8,7 +8,7 @@ from Strategy import *
 stuff = []
 stamps = []
 with open("filed.json","r") as tsla:
-    strat = Strategy()
+    strat = Strategy(1000)
     for i in enumerate(tsla):
 	try:
             data = json.loads(i[1]) #figure out later
