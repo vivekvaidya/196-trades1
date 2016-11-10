@@ -1,11 +1,15 @@
 import pandas
 from Risky import *
+from Money import *
 class Strategy:
     _total_avg = {}
     _counter = 0
-    _PERCENTAGE = .10
+    _PERCENTAGE = .05
     _AMOUNTDAYS = 10
-    risk = Risky()
+    risky = Risky()
+    money = Money(0)
+    def __init__(self, amount):
+        money = Money(amount) #parameter is the amount of money to start with
     def mean_strategy(self,datum):
         """Uses mean reversion to decide if to buy, sell, or do nothing.
         Datum is what is returned by a yahoo finance api call on stocks. """
@@ -23,19 +27,22 @@ class Strategy:
 	    except TypeError:
 		stock_price = self._total_avg[stock_name]
             if stock_price > buy_range+self._total_avg[stock_name]:
-                if risk.risk(stock_name,stock_amount,2):
+                if self.risky.risk(stock_name,stock_amount,2):
                     decision.append({stock_name: [2, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                    self.money.add(stock_price)
                 else:
                     decision.append({stock_name: [0,0]})
 
             elif stock_price < -1*buy_range+self._total_avg[stock_name]:
-                if risk.risk(stock_name,stock_amount,1):
+                if self.risky.risk(stock_name,stock_amount,1) and self.money.getMoney() > stock_price:
                     decision.append({stock_name: [1, stock_amount]})  #0 is nothing, 1 is buy, 2 is sell
+                    self.money.remove(stock_price)
                 else:
                     decision.append({stock_name:[0,0]})
             else:
                 decision.append({stock_name: [0,0]})
         return decision
+
 
     def getAverage(self,amountDays,stock):
         """Gets the average close value of the stock over the last amountDays"""
@@ -50,5 +57,6 @@ class Strategy:
         totals = total/float(amountDays)
         return  totals
 
-    def risk(self,name,amount,buySell):
-        return True
+#    def appendToFile(decision,filename,wa):
+#        with open(filename,wa) as fp:
+#            fp.write(decision
