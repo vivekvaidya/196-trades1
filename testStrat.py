@@ -9,6 +9,7 @@ stuff = []
 stamps = []
 with open("filed.json","r") as tsla:
     strat = Strategy(1000)
+    final_val = 0
     for i in enumerate(tsla):
 	try:
             data = json.loads(i[1]) #figure out later
@@ -17,3 +18,6 @@ with open("filed.json","r") as tsla:
         timeStamp = data["query"]["created"]
         timeStamp = calendar.timegm(time.strptime(timeStamp,"%Y-%m-%dT%H:%M:%SZ"))
         print strat.mean_strategy(data)
+        final_val = data
+    strat.sellAll(data)
+    print strat.printDatMoney()

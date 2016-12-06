@@ -5,7 +5,7 @@ from Money import *
 class Strategy:
     _total_avg = {}
     _counter = 0
-    _PERCENTAGE = .05
+    _PERCENTAGE = .005
     _AMOUNTDAYS = 10
     risky = Risky()
     money = Money(0)
@@ -31,6 +31,7 @@ class Strategy:
                 if self.risky.risk(stock_name,stock_amount,2):
                     decision[stock_name]=[2, stock_amount]  #0 is nothing, 1 is buy, 2 is sell
                     self.money.add(stock_price)
+                    self.risky.stock_counts[stock_name]-=1
                 else:
                     decision[stock_name]= [0,0]
 
@@ -38,6 +39,8 @@ class Strategy:
                 if self.risky.risk(stock_name,stock_amount,1) and self.money.getMoney() > stock_price:
                     decision[stock_name]= [1, stock_amount]  #0 is nothing, 1 is buy, 2 is sell
                     self.money.remove(stock_price)
+                    self.risky.stock_counts[stock_name]+=1
+
                 else:
                     decision[stock_name] = [0,0]
             else:
@@ -64,3 +67,17 @@ class Strategy:
         with open(filename,wa) as fp:
             json.dump(decision,fp)
             fp.write("\n")
+
+    def sellAll(self,datum):
+        for stock in datum["query"]["results"]["quote"]:
+            stock_price = stock["Ask"]
+            stock_name = stock["symbol"]
+            stock_price = float(stock_price)
+            while self.risky.risk(stock_name,1,2):
+                self.money.add(stock_price)
+                self.risky.stock_counts[stock_name]-=1
+    def printDatMoney(self):
+        return self.money.getMoney()
+
+
+
